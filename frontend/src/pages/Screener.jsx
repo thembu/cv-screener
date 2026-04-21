@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import PdfDropzone from "../components/PdfDropeZone";
 import MatchScore from "../components/MatchScore";
+import DiffView from "../components/DiffView";
 
 const API = import.meta.env.VITE_API_URL;
 
@@ -11,6 +12,7 @@ export default function Screener() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
+  const [cvText, setCvText] = useState("");
 
   const handleAnalyse = async () => {
     if (!cvFile || !jd.trim()) return;
@@ -22,6 +24,7 @@ export default function Screener() {
       formData.append("jd", jd);
       const res = await axios.post(`${API}/screener/analyse`, formData);
       setResult(res.data);
+      setCvText(res.data.cvText);
     } catch (err) {
       setError("Something went wrong. Please try again.");
     } finally {
@@ -98,8 +101,7 @@ export default function Screener() {
             <p className="text-xs font-semibold text-zinc-500 uppercase tracking-widest mb-3">
               Match Score
             </p>
-          <MatchScore score={result.match_score} />
-
+            <MatchScore score={result.match_score} />
 
             <div className="mt-5">
               <p className="text-xs font-semibold text-zinc-500 uppercase tracking-widest mb-2">
@@ -145,6 +147,13 @@ export default function Screener() {
                 ))}
               </ul>
             </div>
+
+            <DiffView
+              jd={jd}
+              cvText={cvText}
+              matchedSkills={result.matched_skills}
+              missingSkills={result.missing_skills}
+            />
           </div>
         )}
       </div>

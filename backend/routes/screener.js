@@ -17,7 +17,7 @@ router.post('/analyse', uplaod.single('cv'), async(req, res) => {
     }
 
     const result = await analyseCV.analyseCV(text, jd)
-    res.json(result)
+    res.json({...result , cvText : text})
 
     }catch (err) {
         console.error(err)
