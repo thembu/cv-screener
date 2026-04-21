@@ -3,6 +3,7 @@ import axios from "axios";
 import PdfDropzone from "../components/PdfDropeZone";
 import MatchScore from "../components/MatchScore";
 import DiffView from "../components/DiffView";
+import CvFixer from "../components/CvFixer";
 
 const API = import.meta.env.VITE_API_URL;
 
@@ -52,7 +53,7 @@ export default function Screener() {
       {/* Hero */}
       <div className="max-w-3xl mx-auto px-6 pt-12 pb-8 text-center">
         <h1 className="text-4xl sm:text-5xl font-black tracking-tight mb-2">
-          CV Screener, <span className="text-amber-400">powered by AI.</span>
+          CV Screener, <span className="text-amber-400">powered by Dev Pulse</span>
         </h1>
         <p className="text-zinc-400 text-sm mt-3">
           Upload your CV and paste a job description. Get a skill-gap report in
@@ -148,6 +149,9 @@ export default function Screener() {
               </ul>
             </div>
 
+            <CvFixer feedback={result.cv_feedback} />
+
+
             <DiffView
               jd={jd}
               cvText={cvText}
@@ -155,6 +159,8 @@ export default function Screener() {
               missingSkills={result.missing_skills}
             />
           </div>
+
+
         )}
       </div>
     </div>

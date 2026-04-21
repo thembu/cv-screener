@@ -7,6 +7,7 @@ async function analyseCV(cvText, jdText) {
   const response = await client.chat.completions.create({
     model: "llama-3.3-70b-versatile",
     max_tokens: 1024,
+    temperature: 0,
     messages: [
       {
         role: "system",
@@ -30,14 +31,26 @@ Recommendations rules:
 - If primary technical skills are missing, recommend specific courses or projects to build them
 - Only score above 70 if the candidate meets all hard requirements`
       },
+
       {
-        role: "user",
-        content: `Analyse this CV against the job description and return ONLY this exact JSON with these exact key names — no other keys, no nested objects:
+  role: "user",
+  content: `Analyse this CV against the job description and return ONLY this exact JSON with these exact key names — no other keys, no nested objects except cv_feedback:
 {
   "match_score": <number 0-100>,
   "matched_skills": ["skill1", "skill2"],
   "missing_skills": ["skill1", "skill2"],
-  "recommendations": ["rec1", "rec2"]
+  "recommendations": ["rec1", "rec2"],
+  "cv_feedback": {
+    "overall": "<2-3 sentences on general writing quality>",
+    "tone_score": <number 0-10>,
+    "weak_phrases": [
+  { "original": "<exact phrase from CV>", "rewrite": "<improved version>" },
+  { "original": "<exact phrase from CV>", "rewrite": "<improved version>" },
+  { "original": "<exact phrase from CV>", "rewrite": "<improved version>" },
+  { "original": "<exact phrase from CV>", "rewrite": "<improved version>" },
+  { "original": "<exact phrase from CV>", "rewrite": "<improved version>" }
+]
+  }
 }
 
 JOB DESCRIPTION:
@@ -45,7 +58,8 @@ ${jdText}
 
 CV:
 ${cvText}`
-      }
+}
+    
     ],
   });
 
