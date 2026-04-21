@@ -1,32 +1,32 @@
-import { useState } from 'react'
-import axios from 'axios'
-import PdfDropzone from '../components/PdfDropeZone'
+import { useState } from "react";
+import axios from "axios";
+import PdfDropzone from "../components/PdfDropeZone";
 
-const API = import.meta.env.VITE_API_URL
+const API = import.meta.env.VITE_API_URL;
 
 export default function Screener() {
-  const [cvFile, setCvFile] = useState(null)
-  const [jd, setJd] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [result, setResult] = useState(null)
-  const [error, setError] = useState(null)
+  const [cvFile, setCvFile] = useState(null);
+  const [jd, setJd] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState(null);
+  const [error, setError] = useState(null);
 
   const handleAnalyse = async () => {
-    if (!cvFile || !jd.trim()) return
-    setLoading(true)
-    setError(null)
+    if (!cvFile || !jd.trim()) return;
+    setLoading(true);
+    setError(null);
     try {
-      const formData = new FormData()
-      formData.append('cv', cvFile)
-      formData.append('jd', jd)
-      const res = await axios.post(`${API}/screener/analyse`, formData)
-      setResult(res.data)
+      const formData = new FormData();
+      formData.append("cv", cvFile);
+      formData.append("jd", jd);
+      const res = await axios.post(`${API}/screener/analyse`, formData);
+      setResult(res.data);
     } catch (err) {
-      setError('Something went wrong. Please try again.')
+      setError("Something went wrong. Please try again.");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
@@ -36,7 +36,9 @@ export default function Screener() {
           <div className="w-7 h-7 bg-amber-500 rounded-md flex items-center justify-center">
             <span className="text-black font-black text-xs">SA</span>
           </div>
-          <span className="font-bold text-white tracking-tight">CV Screener</span>
+          <span className="font-bold text-white tracking-tight">
+            CV Screener
+          </span>
         </div>
         <span className="text-xs text-zinc-500 border border-zinc-800 bg-zinc-900 px-3 py-1 rounded-full">
           Part of DevPulse ZA
@@ -49,7 +51,8 @@ export default function Screener() {
           CV Screener, <span className="text-amber-400">powered by AI.</span>
         </h1>
         <p className="text-zinc-400 text-sm mt-3">
-          Upload your CV and paste a job description. Get a skill-gap report in seconds.
+          Upload your CV and paste a job description. Get a skill-gap report in
+          seconds.
         </p>
       </div>
 
@@ -57,13 +60,17 @@ export default function Screener() {
       <div className="max-w-3xl mx-auto px-6 pb-16 grid grid-cols-1 sm:grid-cols-2 gap-4">
         {/* CV upload */}
         <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5">
-          <p className="text-xs font-semibold text-zinc-500 uppercase tracking-widest mb-3">Your CV</p>
+          <p className="text-xs font-semibold text-zinc-500 uppercase tracking-widest mb-3">
+            Your CV
+          </p>
           <PdfDropzone onFileSelect={setCvFile} />
         </div>
 
         {/* JD textarea */}
         <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5">
-          <p className="text-xs font-semibold text-zinc-500 uppercase tracking-widest mb-3">Job Description</p>
+          <p className="text-xs font-semibold text-zinc-500 uppercase tracking-widest mb-3">
+            Job Description
+          </p>
           <textarea
             value={jd}
             onChange={(e) => setJd(e.target.value)}
@@ -80,18 +87,68 @@ export default function Screener() {
             disabled={!cvFile || !jd.trim() || loading}
             className="bg-amber-500 hover:bg-amber-400 disabled:opacity-40 disabled:cursor-not-allowed text-black font-bold px-10 py-3 rounded-xl transition-colors text-sm"
           >
-            {loading ? 'Analysing...' : 'Analyse my CV →'}
+            {loading ? "Analysing..." : "Analyse my CV →"}
           </button>
         </div>
 
         {/* Raw result (Week 7 — just confirm extraction works) */}
         {result && (
           <div className="sm:col-span-2 bg-zinc-900 border border-zinc-800 rounded-2xl p-5">
-            <p className="text-xs font-semibold text-zinc-500 uppercase tracking-widest mb-3">Extracted Text</p>
-            <pre className="text-xs text-zinc-300 whitespace-pre-wrap max-h-64 overflow-y-auto">{result.text}</pre>
+            <p className="text-xs font-semibold text-zinc-500 uppercase tracking-widest mb-3">
+              Match Score
+            </p>
+            <p className="text-4xl font-black text-amber-400">
+              {result.match_score}
+              <span className="text-zinc-500 text-lg">/100</span>
+            </p>
+
+            <div className="mt-5">
+              <p className="text-xs font-semibold text-zinc-500 uppercase tracking-widest mb-2">
+                Matched Skills
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {result.matched_skills?.map((skill) => (
+                  <span
+                    key={skill}
+                    className="text-xs bg-emerald-900 text-emerald-400 px-3 py-1 rounded-full"
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-5">
+              <p className="text-xs font-semibold text-zinc-500 uppercase tracking-widest mb-2">
+                Missing Skills
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {result.missing_skills?.map((skill) => (
+                  <span
+                    key={skill}
+                    className="text-xs bg-red-900 text-red-400 px-3 py-1 rounded-full"
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-5">
+              <p className="text-xs font-semibold text-zinc-500 uppercase tracking-widest mb-2">
+                Recommendations
+              </p>
+              <ul className="space-y-2">
+                {result.recommendations?.map((rec, i) => (
+                  <li key={i} className="text-sm text-zinc-300">
+                    → {rec}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         )}
       </div>
     </div>
-  )
+  );
 }

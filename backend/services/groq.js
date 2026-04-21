@@ -30,7 +30,11 @@ ${cvText}`
   })
 
   const raw = response.choices[0].message.content
-  return JSON.parse(raw)
+const jsonMatch = raw.match(/```json\s*([\s\S]*?)\s*```/) || raw.match(/\{[\s\S]*\}/)
+const jsonStr = jsonMatch[1] || jsonMatch[0]
+return JSON.parse(jsonStr)
+
+  
 }
 
 module.exports = { analyseCV }
