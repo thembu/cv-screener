@@ -3,6 +3,8 @@ export default function MatchScore({ score }) {
   const circumference = 2 * Math.PI * radius
   const offset = circumference - (score / 100) * circumference
 
+  const color = score >= 70 ? '#10b981' : score >= 40 ? '#f59e0b' : '#ef4444'
+
   return (
     <div className="flex flex-col items-center justify-center bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
       <svg width="120" height="120" viewBox="0 0 120 120">
@@ -10,7 +12,7 @@ export default function MatchScore({ score }) {
         <circle
           cx="60" cy="60" r={radius}
           fill="none"
-          stroke="#f59e0b"
+          stroke={color}
           strokeWidth="10"
           strokeDasharray={circumference}
           strokeDashoffset={offset}
