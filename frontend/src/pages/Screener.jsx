@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import PdfDropzone from "../components/PdfDropeZone";
+import MatchScore from "../components/MatchScore";
 
 const API = import.meta.env.VITE_API_URL;
 
@@ -97,10 +98,8 @@ export default function Screener() {
             <p className="text-xs font-semibold text-zinc-500 uppercase tracking-widest mb-3">
               Match Score
             </p>
-            <p className="text-4xl font-black text-amber-400">
-              {result.match_score}
-              <span className="text-zinc-500 text-lg">/100</span>
-            </p>
+          <MatchScore score={result.match_score} />
+
 
             <div className="mt-5">
               <p className="text-xs font-semibold text-zinc-500 uppercase tracking-widest mb-2">
