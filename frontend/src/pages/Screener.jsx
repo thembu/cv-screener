@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import axios from 'axios'
-import PdfDropzone from '../components/PdfDropzone'
+import PdfDropzone from '../components/PdfDropeZone'
 
 const API = import.meta.env.VITE_API_URL
 
@@ -19,7 +19,7 @@ export default function Screener() {
       const formData = new FormData()
       formData.append('cv', cvFile)
       formData.append('jd', jd)
-      const res = await axios.post(`${API}/api/screener/analyse`, formData)
+      const res = await axios.post(`${API}/screener/analyse`, formData)
       setResult(res.data)
     } catch (err) {
       setError('Something went wrong. Please try again.')
