@@ -4,6 +4,7 @@ import PdfDropzone from "../components/PdfDropeZone";
 import MatchScore from "../components/MatchScore";
 import DiffView from "../components/DiffView";
 import CvFixer from "../components/CvFixer";
+import JobSearchModal from "../components/JobSearchModal";
 
 const API = import.meta.env.VITE_API_URL;
 
@@ -14,6 +15,7 @@ export default function Screener() {
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
   const [cvText, setCvText] = useState("");
+  const [showModal, setShowModal] = useState(false);
 
   const handleAnalyse = async () => {
     if (!cvFile || !jd.trim()) return;
@@ -53,7 +55,8 @@ export default function Screener() {
       {/* Hero */}
       <div className="max-w-3xl mx-auto px-6 pt-12 pb-8 text-center">
         <h1 className="text-4xl sm:text-5xl font-black tracking-tight mb-2">
-          CV Screener, <span className="text-amber-400">powered by Dev Pulse</span>
+          CV Screener,{" "}
+          <span className="text-amber-400">powered by Dev Pulse</span>
         </h1>
         <p className="text-zinc-400 text-sm mt-3">
           Upload your CV and paste a job description. Get a skill-gap report in
@@ -83,6 +86,14 @@ export default function Screener() {
             className="w-full h-40 bg-zinc-950 border border-zinc-700 rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-amber-500 transition-colors resize-none"
           />
         </div>
+
+        <button
+          onClick={() => setShowModal(true)}
+          className="mt-2 flex items-center gap-2 text-xs text-zinc-500 border border-zinc-700 px-3 py-1.5 rounded-full hover:border-zinc-500 hover:text-zinc-300 transition-colors"
+        >
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" />
+          Load from job board
+        </button>
 
         {/* Analyse button */}
         <div className="sm:col-span-2 flex flex-col items-center gap-3">
@@ -151,7 +162,6 @@ export default function Screener() {
 
             <CvFixer feedback={result.cv_feedback} />
 
-
             <DiffView
               jd={jd}
               cvText={cvText}
@@ -159,10 +169,15 @@ export default function Screener() {
               missingSkills={result.missing_skills}
             />
           </div>
-
-
         )}
       </div>
+
+      {showModal && (
+        <JobSearchModal
+          onSelect={(description) => setJd(description)}
+          onClose={() => setShowModal(false)}
+        />
+      )}
     </div>
   );
 }
