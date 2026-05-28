@@ -9,7 +9,7 @@ export default function JobSearchModal({ onSelect, onClose }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    axios.get(`${JOBS_API}/jobs?limit=100`)
+    axios.get(`${JOBS_API}/jobs?limit=200`)
       .then(res => setJobs(res.data.data))
       .catch(console.error)
       .finally(() => setLoading(false))
